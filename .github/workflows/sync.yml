@@ -1,0 +1,58 @@
+name: Sync Godoy Cruz Calendar
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Daily at 12 PM UTC (9 AM Argentina)
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Create credentials file
+      run: |
+        echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+    
+    - name: Create token file
+      run: |
+        echo '${{ secrets.GOOGLE_TOKEN }}' | base64 -d > token.pickle
+    
+    - name: Create .env file
+      run: |
+        cat > .env << EOF
+        TEAM_URL=${{ secrets.TEAM_URL }}
+        TEAM_NAME=${{ secrets.TEAM_NAME }}
+        OUTPUT_JSON=matches.json
+        CALENDAR_ID=${{ secrets.CALENDAR_ID }}
+        CREDENTIALS_FILE=credentials.json
+        TOKEN_FILE=token.pickle
+        EVENT_DURATION_HOURS=${{ secrets.EVENT_DURATION_HOURS }}
+        REMINDER_MINUTES=${{ secrets.REMINDER_MINUTES }}
+        EVENT_COLOR_ID=${{ secrets.EVENT_COLOR_ID }}
+        TIMEZONE=${{ secrets.TIMEZONE }}
+        EOF
+    
+    - name: Run sync
+      run: python main.py
+    
+    - name: Upload matches JSON as artifact
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: matches
+        path: matches.json
+        retention-days: 7
