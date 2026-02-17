@@ -2,7 +2,7 @@ name: Sync Godoy Cruz Calendar
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # Daily at 12 PM UTC (9 AM Argentina)
+    - cron: '0 16 * * 2'  # Every tuesday at 16h UTC (13h Argentina)
   workflow_dispatch:  # Allow manual trigger from GitHub UI
 
 jobs:
