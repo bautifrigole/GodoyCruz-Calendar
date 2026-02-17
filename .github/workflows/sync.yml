@@ -51,7 +51,7 @@ jobs:
     
     - name: Upload matches JSON as artifact
       if: success()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: matches
         path: matches.json
