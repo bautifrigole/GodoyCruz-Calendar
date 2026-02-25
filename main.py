@@ -34,7 +34,7 @@ def main():
     print("-" * 60)
     
     try:
-        import google_calendar
+        import google_calendar_service_account as google_calendar
         success = google_calendar.main()
         
         if not success:
