@@ -13,7 +13,8 @@ OUTPUT_JSON = os.getenv('OUTPUT_JSON', 'matches.json')
 
 def getNextMatches(url):
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'es-AR,es;q=0.9',
     }
     
     try:
@@ -50,6 +51,8 @@ def getNextMatches(url):
             rival = entity.get('short_name', 'N/A')
             game_id = game.get('id')
             game_url_name = game.get('url_name')
+
+            print(f"RAW fecha/hora: {fecha} {hora}")
             
             competicion = 'N/A'
             if game_url_name and game_id:
