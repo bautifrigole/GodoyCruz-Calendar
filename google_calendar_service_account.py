@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import json
 import os
 from dotenv import load_dotenv
-import pytz
+from zoneinfo import ZoneInfo
 
 load_dotenv()
 
@@ -36,13 +36,9 @@ def parse_date_time(fecha, hora):
     current_year = datetime.now().year
     date_str = f"{fecha}/{current_year} {hora}"
     
-    try:
-        dt = datetime.strptime(date_str, "%d/%m/%Y %H:%M")
-    except ValueError:
-        dt = datetime.strptime(date_str, "%d/%m/%Y %H:%M")
+    dt = datetime.strptime(date_str, "%d/%m/%Y %H:%M")
     
-    argentina_tz = pytz.timezone(TIMEZONE)
-    dt_aware = argentina_tz.localize(dt)
+    dt_aware = dt.replace(tzinfo=ZoneInfo(TIMEZONE))
     
     return dt_aware
 
