@@ -61,6 +61,10 @@ def event_exists(service, calendar_id, match_id):
         print(f"Error checking if event exists: {e}")
         return None
 
+def build_datetime_string(fecha, hora):
+    current_year = datetime.now().year
+    return f"{current_year}-{fecha[3:5]}-{fecha[0:2]}T{hora}:00"
+
 def create_calendar_event(service, calendar_id, partido):
     match_id = partido['id']
     rival = partido['rival']
@@ -76,18 +80,21 @@ def create_calendar_event(service, calendar_id, partido):
     else:
         title = f"{rival} vs {TEAM_NAME}"
     
-    start_dt = parse_date_time(fecha, hora)
-    end_dt = start_dt + timedelta(hours=EVENT_DURATION_HOURS)
+    current_year = datetime.now().year
+    start_str = build_datetime_string(fecha, hora)
+
+    end_dt = datetime.strptime(f"{fecha} {hora}", "%d/%m %H:%M") + timedelta(hours=EVENT_DURATION_HOURS)
+    end_str = f"{current_year}-{fecha[3:5]}-{fecha[0:2]}T{end_dt.strftime('%H:%M:%S')}"
     
     event = {
         'summary': title,
         'description': f"Competition: {competicion}\nMatch ID: {match_id}",
         'start': {
-            'dateTime': start_dt.isoformat(),
+            'dateTime': start_str,
             'timeZone': TIMEZONE,
         },
         'end': {
-            'dateTime': end_dt.isoformat(),
+            'dateTime': end_str,
             'timeZone': TIMEZONE,
         },
         'colorId': EVENT_COLOR_ID,
