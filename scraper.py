@@ -15,12 +15,15 @@ def getNextMatches(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept-Language': 'es-AR,es;q=0.9',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Connection': 'keep-alive',
     }
     
     try:
         response = requests.get(url, headers=headers, timeout=15)
         response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.text, 'html.parser')
     except Exception as e:
         print(f"Error fetching team page: {e}")
         return []
