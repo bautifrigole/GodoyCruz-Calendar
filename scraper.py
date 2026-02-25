@@ -20,7 +20,9 @@ def getNextMatches(url):
     }
     
     try:
-        response = requests.get(url, headers=headers, timeout=15)
+        scraper = cloudscraper.create_scraper()
+        response = scraper.get(url, headers=headers, timeout=15)
+        #response = requests.get(url, headers=headers, timeout=15)
         response.raise_for_status()
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.text, 'html.parser')
