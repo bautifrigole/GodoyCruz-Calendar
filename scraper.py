@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
-import requests
 import json
 import time
 import os
+import cloudscraper
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -80,7 +80,9 @@ def getNextMatches(url):
 
 def getCompeticion(url_partido, headers):
     try:
-        response = requests.get(url_partido, headers=headers, timeout=15)
+        scraper = cloudscraper.create_scraper()
+        response = scraper.get(url_partido, headers=headers, timeout=15)
+        #response = requests.get(url_partido, headers=headers, timeout=15)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
         
